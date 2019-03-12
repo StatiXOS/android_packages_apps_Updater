@@ -69,7 +69,6 @@
     <string name="menu_auto_delete_updates">Delete updates when installed</string>
     <string name="menu_delete_update">Delete</string>
     <string name="menu_copy_url">Copy URL</string>
-    <string name="menu_ab_perf_mode">Prioritize update process</string>
     <string name="menu_update_recovery">Update recovery</string>
     <string name="toast_forced_update_recovery">It is impossible to disable Lineage Recovery updates on this device.</string>
 
