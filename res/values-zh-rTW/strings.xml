@@ -60,11 +60,11 @@
     <string name="snack_download_verification_failed">更新驗證失敗。</string>
     <string name="snack_download_verified">下載已完成。</string>
     <string name="snack_update_not_installable">此更新無法安裝在目前版本上。</string>
-    <string name="header_title_text">LineageOS\n%1$s</string>
+    <string name="header_title_text">StatiXOS\n%1$s</string>
     <string name="header_android_version">Android <xliff:g id="version" example="7.1.2">%1$s</xliff:g></string>
     <string name="header_last_updates_check">上次檢查：<xliff:g id="date" example="1 January 1970">%1$s</xliff:g> (<xliff:g id="time" example="01:23">%2$s</xliff:g>)</string>
-    <string name="list_build_version">LineageOS <xliff:g id="version" example="14.1">%1$s</xliff:g></string>
-    <string name="list_build_version_date">LineageOS <xliff:g id="version" example="14.1">%1$s</xliff:g>-<xliff:g id="date" example="July 11, 2017">%2$s</xliff:g></string>
+    <string name="list_build_version">StatiXOS <xliff:g id="version" example="14.1">%1$s</xliff:g></string>
+    <string name="list_build_version_date">StatiXOS <xliff:g id="version" example="14.1">%1$s</xliff:g>-<xliff:g id="date" example="July 11, 2017">%2$s</xliff:g></string>
     <string name="list_download_progress_new"><xliff:g id="filesize_without_unit" example="12.2">%1$s</xliff:g> 的 <xliff:g id="filesize_without_unit" example="310 MB">%2$s</xliff:g> • <xliff:g id="percentage" example="56">%3$s</xliff:g></string>
     <string name="list_download_progress_eta_new"><xliff:g id="filesize_without_unit" example="12.2">%1$s</xliff:g> 的 <xliff:g id="filesize_without_unit" example="310 MB">%2$s</xliff:g> (<xliff:g id="eta" example="3 minutes left">%3$s</xliff:g>) • <xliff:g id="percentage" example="56">%4$s</xliff:g></string>
     <string name="list_verifying_update">正在驗證更新</string>
@@ -101,7 +101,6 @@
     <string name="update_on_mobile_data_message">下載的更新檔案有可能會使用較高的行動數據，您要繼續嗎？</string>
     <string name="checkbox_mobile_data_warning">不再顯示</string>
     <string name="menu_mobile_data_warning">行動數據警告</string>
-    <string name="blocked_update_dialog_title">更新已被封鎖</string>
     <string name="blocked_update_dialog_message">無法使用更新應用程式安裝此更新。 有關詳細資訊，請閱讀 <xliff:g id="info_url">%1$s </xliff:g> 。</string>
     <string name="export_channel_title">匯出完成</string>
     <string name="new_updates_channel_title">有新的更新</string>

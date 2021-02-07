@@ -49,11 +49,11 @@
     <string name="snack_download_verification_failed">Provjera ažuriranja nije uspjela.</string>
     <string name="snack_download_verified">Preuzimanje je završeno.</string>
     <string name="snack_update_not_installable">Ovo se ažuriranje ne može instalirati na trenutnu verziju.</string>
-    <string name="header_title_text">LineageOS\n%1$s</string>
+    <string name="header_title_text">StatiXOS\n%1$s</string>
     <string name="header_android_version">Android <xliff:g id="version" example="7.1.2">%1$s</xliff:g></string>
     <string name="header_last_updates_check">Zadnja provjera: <xliff:g id="date" example="1 January 1970">%1$s </xliff:g> (<xliff:g id="time" example="01:23">%2$s </xliff:g>)</string>
-    <string name="list_build_version">LineageOS <xliff:g id="version" example="7.1.2">%1$s</xliff:g></string>
-    <string name="list_build_version_date">LineageOS <xliff:g id="version" example="14.1">%1$s </xliff:g> - <xliff:g id="date" example="July 11, 2017">%2$s </xliff:g></string>
+    <string name="list_build_version">StatiXOS <xliff:g id="version" example="7.1.2">%1$s</xliff:g></string>
+    <string name="list_build_version_date">StatiXOS <xliff:g id="version" example="14.1">%1$s </xliff:g> - <xliff:g id="date" example="July 11, 2017">%2$s </xliff:g></string>
     <string name="list_verifying_update">Provjera ažuriranja</string>
     <string name="list_no_updates">Nema pronađenih novih ažuriranja. Za ručnu provjeru novih ažuriranja upotrijebite gumb Osvježi.</string>
     <string name="action_download">Preuzmi</string>
@@ -73,7 +73,6 @@
     <string name="update_on_mobile_data_message">Upravo ćete preuzeti paket ažuriranja pomoću mobilnih podataka koji će vjerojatno uzrokovati visoku upotrebu podataka. Želite li nastaviti?</string>
     <string name="checkbox_mobile_data_warning">Ne prikazuj ponovno</string>
     <string name="menu_mobile_data_warning">Upozorenje o mobilnim podacima</string>
-    <string name="blocked_update_dialog_title">Ažuriranje je blokirano</string>
     <string name="blocked_update_dialog_message">Ovo se ažuriranje ne može instalirati pomoću aplikacije za ažuriranje.  Molimo pročitajte <xliff:g id="info_url">%1$s</xliff:g> za više informacija.</string>
     <string name="export_channel_title">Kraj izvoza</string>
     <string name="new_updates_channel_title">Nova ažuriranja</string>

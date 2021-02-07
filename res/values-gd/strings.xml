@@ -60,11 +60,11 @@
     <string name="snack_download_verification_failed">Dh’fhàillig le dearbhadh an ùrachaidh.</string>
     <string name="snack_download_verified">Tha an luchdadh a-nuas deiseil.</string>
     <string name="snack_update_not_installable">Chan urrainn dhut an t-ùrachadh seo a’ stàladh air an tionndadh làithreach agad.</string>
-    <string name="header_title_text">LineageOS\n%1$s</string>
+    <string name="header_title_text">StatiXOS\n%1$s</string>
     <string name="header_android_version">Android <xliff:g id="version" example="7.1.2">%1$s</xliff:g></string>
     <string name="header_last_updates_check">An sgrùdadh mu dheireadh: <xliff:g id="date" example="1 January 1970">%1$s</xliff:g> (<xliff:g id="time" example="01:23">%2$s</xliff:g>)</string>
-    <string name="list_build_version">LineageOS <xliff:g id="version" example="14.1">%1$s</xliff:g></string>
-    <string name="list_build_version_date">LineageOS <xliff:g id="version" example="14.1">%1$s</xliff:g> – <xliff:g id="date" example="July 11, 2017">%2$s</xliff:g></string>
+    <string name="list_build_version">StatiXOS <xliff:g id="version" example="14.1">%1$s</xliff:g></string>
+    <string name="list_build_version_date">StatiXOS <xliff:g id="version" example="14.1">%1$s</xliff:g> – <xliff:g id="date" example="July 11, 2017">%2$s</xliff:g></string>
     <string name="list_download_progress_new"><xliff:g id="filesize_without_unit" example="12.2">%1$s</xliff:g> de <xliff:g id="filesize_without_unit" example="310 MB">%2$s</xliff:g> • <xliff:g id="percentage" example="56">%3$s</xliff:g></string>
     <string name="list_download_progress_eta_new"><xliff:g id="filesize_without_unit" example="12.2">%1$s</xliff:g> de <xliff:g id="filesize_without_unit" example="310 MB">%2$s</xliff:g> (<xliff:g id="eta" example="3 mionaidean air fhàgail">%3$s</xliff:g>) • <xliff:g id="percentage" example="56">%4$s</xliff:g></string>
     <string name="list_verifying_update">A’ dearbhadh an ùrachaidh</string>
@@ -110,7 +110,6 @@
     <string name="update_on_mobile_data_message">Tha thu an impis pacaid ùrachaidh a luchdadh a-nuas le dàta mobile agus caithidh sin tòrr dàta gun teagamh. A bheil thu airson leantainn air adhart?</string>
     <string name="checkbox_mobile_data_warning">Na seall seo a-rithist</string>
     <string name="menu_mobile_data_warning">Rabhadh mu dhàta mobile</string>
-    <string name="blocked_update_dialog_title">Cha an t-ùrachadh a bhacadh</string>
     <string name="blocked_update_dialog_message">Cha ghabh an t-ùrachadh seo stàladh le aplacaid an ùraicheir. Leugh <xliff:g id="info_url">%1$s</xliff:g> airson barrachd fiosrachaidh.</string>
     <string name="export_channel_title">Coileanadh an às-phortaidh</string>
     <string name="new_updates_channel_title">Ùrachaidhean</string>
