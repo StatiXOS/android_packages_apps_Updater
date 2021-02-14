@@ -9,5 +9,6 @@
 /gradlew
 /gradlew.bat
 /system_libs/*.jar
+/libs
 /keystore.properties
 *.jks
