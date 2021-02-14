@@ -15,15 +15,19 @@
  */
 package com.statix.updater.misc;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.BatteryManager;
 import android.os.Environment;
 import android.os.SystemProperties;
 import android.os.storage.StorageManager;
@@ -31,11 +35,14 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.statix.updater.R;
 import com.statix.updater.UpdatesDbHelper;
+import com.statix.updater.controller.UpdaterController;
 import com.statix.updater.controller.UpdaterService;
 import com.statix.updater.model.Update;
 import com.statix.updater.model.UpdateBaseInfo;
@@ -45,11 +52,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -58,8 +68,11 @@ public class Utils {
 
     private static final String TAG = "Utils";
 
-    private Utils() {
-    }
+    private Utils() {}
+
+    public static final int BATTERY_PLUGGED_ANY = BatteryManager.BATTERY_PLUGGED_AC
+            | BatteryManager.BATTERY_PLUGGED_USB
+            | BatteryManager.BATTERY_PLUGGED_WIRELESS;
 
     public static File getDownloadPath(Context context) {
         return new File(context.getString(R.string.download_path));
@@ -380,5 +393,85 @@ public class Utils {
 
     public static boolean isRecoveryUpdateExecPresent() {
         return new File(Constants.UPDATE_RECOVERY_EXEC).exists();
+    }
+
+
+    public static AlertDialog.Builder getInstallDialog(final String downloadId, Activity activity) {
+        if (!isBatteryLevelOk(activity)) {
+            Resources resources = activity.getResources();
+            String message = resources.getString(R.string.dialog_battery_low_message_pct,
+                    resources.getInteger(R.integer.battery_ok_percentage_discharging),
+                    resources.getInteger(R.integer.battery_ok_percentage_charging));
+            return new AlertDialog.Builder(activity)
+                    .setTitle(R.string.dialog_battery_low_title)
+                    .setMessage(message)
+                    .setPositiveButton(android.R.string.ok, null);
+        }
+        UpdateInfo update = UpdaterController.getInstance().getUpdate(downloadId);
+        int resId;
+        try {
+            if (Utils.isABUpdate(update.getFile())) {
+                resId = R.string.apply_update_dialog_message_ab;
+            } else {
+                resId = R.string.apply_update_dialog_message;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Could not determine the type of the update");
+            return null;
+        }
+
+        String buildDate = StringGenerator.getDateLocalizedUTC(activity,
+                DateFormat.MEDIUM, update.getTimestamp());
+        String buildInfoText = activity.getString(R.string.list_build_version_date,
+                BuildInfoUtils.getBuildVersion(), buildDate);
+        return new AlertDialog.Builder(activity)
+                .setTitle(R.string.apply_update_dialog_title)
+                .setMessage(activity.getString(resId, buildInfoText,
+                        activity.getString(android.R.string.ok)))
+                .setPositiveButton(android.R.string.ok,
+                        (dialog, which) -> Utils.triggerUpdate(activity, downloadId))
+                .setNegativeButton(android.R.string.cancel, null);
+    }
+
+    private static boolean isBatteryLevelOk(Activity activity) {
+        Intent intent = activity.registerReceiver(null,
+                new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        if (!intent.getBooleanExtra(BatteryManager.EXTRA_PRESENT, false)) {
+            return true;
+        }
+        int percent = Math.round(100.f * intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 100) /
+                intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100));
+        int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0);
+        int required = (plugged & BATTERY_PLUGGED_ANY) != 0 ?
+                activity.getResources().getInteger(R.integer.battery_ok_percentage_charging) :
+                activity.getResources().getInteger(R.integer.battery_ok_percentage_discharging);
+        return percent >= required;
+    }
+
+    public static UpdateInfo updateInfoFromFileForced(File f) {
+        Update update = new Update();
+        update.setTimestamp(System.currentTimeMillis());
+        update.setName(f.getName());
+        update.setFile(f);
+        update.setDownloadId(getRandomHexString(32));
+        update.setType("local_update");
+        try {
+            update.setFileSize(Files.size(f.toPath()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        update.setDownloadUrl("manual");
+        update.setVersion("manual");
+        return update;
+    }
+
+    private static String getRandomHexString(int numchars){
+        Random r = new Random();
+        StringBuffer sb = new StringBuffer();
+        while(sb.length() < numchars){
+            sb.append(Integer.toHexString(r.nextInt()));
+        }
+
+        return sb.toString().substring(0, numchars);
     }
 }

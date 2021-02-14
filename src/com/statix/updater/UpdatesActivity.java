@@ -15,6 +15,7 @@
  */
 package com.statix.updater;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -67,7 +68,10 @@ import com.statix.updater.misc.Utils;
 import com.statix.updater.model.UpdateInfo;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -75,6 +79,7 @@ import java.util.UUID;
 public class UpdatesActivity extends UpdatesListActivity {
 
     private static final String TAG = "UpdatesActivity";
+    private static final int ACTIVITY_CHOOSE_FILE = 9999;
     private UpdaterService mUpdaterService;
     private BroadcastReceiver mBroadcastReceiver;
 
@@ -163,11 +168,16 @@ public class UpdatesActivity extends UpdatesListActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_preferences: {
                 showPreferencesDialog();
+                return true;
+            }
+            case R.id.menu_local_update: {
+                showLocalUpdateDialog();
                 return true;
             }
         }
@@ -324,7 +334,7 @@ public class UpdatesActivity extends UpdatesListActivity {
         final SharedPreferences preferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
         long lastCheck = preferences.getLong(Constants.PREF_LAST_UPDATE_CHECK, -1) / 1000;
-        String lastCheckString = getString(R.string.header_last_updates_check,
+        @SuppressLint("StringFormatMatches") String lastCheckString = getString(R.string.header_last_updates_check,
                 StringGenerator.getDateLocalized(this, DateFormat.LONG, lastCheck),
                 StringGenerator.getTimeLocalized(this, lastCheck));
         TextView headerLastCheck = (TextView) findViewById(R.id.header_last_check);
@@ -449,5 +459,68 @@ public class UpdatesActivity extends UpdatesListActivity {
                     }
                 })
                 .show();
+    }
+    private void showLocalUpdateDialog() {
+        Intent chooseFile;
+        Intent intent;
+        chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
+        chooseFile.addCategory(Intent.CATEGORY_OPENABLE);
+        chooseFile.setType("*/*");
+        intent = Intent.createChooser(chooseFile, "Choose a file");
+        startActivityForResult(intent, ACTIVITY_CHOOSE_FILE);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) return;
+        if (requestCode == ACTIVITY_CHOOSE_FILE) {
+            Uri uri = data.getData();
+            Utils.cleanupDownloadsDir(this);
+            File downloadPath = new File(Utils.getDownloadPath(this), "update.zip");
+            boolean fileCopySuccess = false;
+            try {
+                copy(uri, downloadPath);
+                fileCopySuccess = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (fileCopySuccess) {
+                UpdateInfo update = Utils.updateInfoFromFileForced(downloadPath);
+                mUpdaterService.getUpdaterController().addUpdate(update);
+                mUpdaterService.getUpdaterController().onUpdateDownloaded(update.getDownloadId());
+            }
+        }
+    }
+
+    private void startInstallIfLocalUpdate(String downloadId) {
+        UpdateInfo update = UpdaterController.getInstance().getUpdate(downloadId);
+        if (update.getType().equals("local_update")) {
+            final boolean canInstall = Utils.canInstall(update);
+            if (canInstall) {
+                Utils.getInstallDialog(update.getDownloadId(), this).show();
+            } else {
+                showSnackbar(R.string.snack_update_not_installable,
+                        Snackbar.LENGTH_LONG);
+            }
+        }
+    }
+
+    private void copy(Uri src, File dst) throws IOException {
+        InputStream in = this.getContentResolver().openInputStream(src);
+        try {
+            OutputStream out = new FileOutputStream(dst);
+            try {
+                // Transfer bytes from in to out
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+            } finally {
+                out.close();
+            }
+        } finally {
+            in.close();
+        }
     }
 }
