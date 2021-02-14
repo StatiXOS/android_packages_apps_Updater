@@ -15,6 +15,7 @@
  */
 package com.statix.updater;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -62,10 +63,6 @@ import java.util.List;
 public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.ViewHolder> {
 
     private static final String TAG = "UpdateListAdapter";
-
-    private static final int BATTERY_PLUGGED_ANY = BatteryManager.BATTERY_PLUGGED_AC
-            | BatteryManager.BATTERY_PLUGGED_USB
-            | BatteryManager.BATTERY_PLUGGED_WIRELESS;
 
     private final float mAlphaDisabledValue;
 
@@ -368,7 +365,7 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
                 final boolean canInstall = Utils.canInstall(update);
                 clickListener = enabled ? view -> {
                     if (canInstall) {
-                        getInstallDialog(downloadId).show();
+                        Utils.getInstallDialog(downloadId, mActivity).show();
                     } else {
                         mActivity.showSnackbar(R.string.snack_update_not_installable,
                                 Snackbar.LENGTH_LONG);
@@ -436,43 +433,6 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
         };
     }
 
-    private AlertDialog.Builder getInstallDialog(final String downloadId) {
-        if (!isBatteryLevelOk()) {
-            Resources resources = mActivity.getResources();
-            String message = resources.getString(R.string.dialog_battery_low_message_pct,
-                    resources.getInteger(R.integer.battery_ok_percentage_discharging),
-                    resources.getInteger(R.integer.battery_ok_percentage_charging));
-        return new AlertDialog.Builder(mActivity, R.style.AlertDialogTheme)
-                    .setTitle(R.string.dialog_battery_low_title)
-                    .setMessage(message)
-                    .setPositiveButton(android.R.string.ok, null);
-        }
-        UpdateInfo update = mUpdaterController.getUpdate(downloadId);
-        int resId;
-        try {
-            if (Utils.isABUpdate(update.getFile())) {
-                resId = R.string.apply_update_dialog_message_ab;
-            } else {
-                resId = R.string.apply_update_dialog_message;
-            }
-        } catch (IOException e) {
-            Log.e(TAG, "Could not determine the type of the update");
-            return null;
-        }
-
-        String buildDate = StringGenerator.getDateLocalizedUTC(mActivity,
-                DateFormat.MEDIUM, update.getTimestamp());
-        String buildInfoText = mActivity.getString(R.string.list_build_version_date,
-                BuildInfoUtils.getBuildVersion(), buildDate);
-        return new AlertDialog.Builder(mActivity, R.style.AlertDialogTheme)
-                .setTitle(R.string.apply_update_dialog_title)
-                .setMessage(mActivity.getString(resId, buildInfoText,
-                        mActivity.getString(android.R.string.ok)))
-                .setPositiveButton(android.R.string.ok,
-                        (dialog, which) -> Utils.triggerUpdate(mActivity, downloadId))
-                .setNegativeButton(android.R.string.cancel, null);
-    }
-
     private AlertDialog.Builder getCancelInstallationDialog() {
         return new AlertDialog.Builder(mActivity, R.style.AlertDialogTheme)
                 .setMessage(R.string.cancel_installation_dialog_message)
@@ -485,6 +445,7 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
                 .setNegativeButton(android.R.string.cancel, null);
     }
 
+    @SuppressLint("RestrictedApi")
     private void startActionMode(final UpdateInfo update, final boolean canDelete, View anchor) {
         mSelectedDownload = update.getDownloadId();
         notifyItemChanged(update.getDownloadId());
@@ -518,18 +479,66 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
         helper.show();
     }
 
-    private boolean isBatteryLevelOk() {
-        Intent intent = mActivity.registerReceiver(null,
-                new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        if (!intent.getBooleanExtra(BatteryManager.EXTRA_PRESENT, false)) {
-            return true;
+    private void exportUpdate(UpdateInfo update) {
+        File dest = new File(Utils.getExportPath(mActivity), update.getName());
+        if (dest.exists()) {
+            dest = Utils.appendSequentialNumber(dest);
         }
-        int percent = Math.round(100.f * intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 100) /
-                intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100));
-        int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0);
-        int required = (plugged & BATTERY_PLUGGED_ANY) != 0 ?
-                mActivity.getResources().getInteger(R.integer.battery_ok_percentage_charging) :
-                mActivity.getResources().getInteger(R.integer.battery_ok_percentage_discharging);
-        return percent >= required;
+        Intent intent = new Intent(mActivity, ExportUpdateService.class);
+        intent.setAction(ExportUpdateService.ACTION_START_EXPORTING);
+        intent.putExtra(ExportUpdateService.EXTRA_SOURCE_FILE, update.getFile());
+        intent.putExtra(ExportUpdateService.EXTRA_DEST_FILE, dest);
+        mActivity.startService(intent);
     }
+
+    private void showInfoDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(mActivity)
+                .setTitle(R.string.blocked_update_dialog_title)
+                .setPositiveButton(android.R.string.ok, null)
+                .setMessage(R.string.blocked_update_dialog_message)
+                .show();
+        TextView textView = (TextView) infoDialog.findViewById(android.R.id.message);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    private class getChangelogDialog extends AsyncTask<String, Void, String> {
+
+        protected String doInBackground(String... strings) {
+            String outputString = "";
+            String inputString;
+            int i = 0;
+
+            try {
+                URL changelog = new URL(strings[0]);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(
+                        changelog.openStream()));
+
+                while((inputString = in.readLine()) != null) {
+                    // don't include the top 4 lines of the changelog
+                    if (i >= 4) {
+                        outputString += inputString + "\n";
+                    }
+                    i++;
+                }
+
+                in.close();
+                return outputString;
+            } catch(IOException e) {
+                Log.e(TAG, "Could not fetch changelog from " + strings[0]);
+                return mActivity.getResources().getString(R.string.changelog_fail);
+            }
+        }
+
+        protected void onPostExecute(String result) {
+            AlertDialog dialog = new AlertDialog.Builder(mActivity)
+                    .setTitle(R.string.action_changelog)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .setMessage(result)
+                    .show();
+            TextView textView = (TextView) dialog.findViewById(android.R.id.message);
+            textView.setMovementMethod(LinkMovementMethod.getInstance());
+        }
+    }
+
 }
