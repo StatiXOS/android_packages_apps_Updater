@@ -7,6 +7,11 @@
 <!--        android:title="@string/menu_refresh"-->
 <!--        app:showAsAction="ifRoom" />-->
     <item
+        android:id="@+id/menu_local_update"
+        android:title="@string/menu_local_update"
+        android:icon="@drawable/ic_folder_open"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/menu_preferences"
         android:title="@string/menu_preferences"
         app:showAsAction="never" />
