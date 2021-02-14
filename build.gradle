@@ -14,10 +14,6 @@ buildscript {
     }
 }
 
-def keystorePropertiesFile = rootProject.file("keystore.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
 apply plugin: 'com.android.application'
 
 android {
@@ -47,14 +43,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    signingConfigs {
-        debug {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-        }
-    }
+
 }
 
 dependencies {
