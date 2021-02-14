@@ -55,6 +55,7 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
+
 }
 
 dependencies {
