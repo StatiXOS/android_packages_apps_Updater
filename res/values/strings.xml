@@ -61,6 +61,7 @@
 
     <string name="menu_refresh">Refresh</string>
     <string name="menu_preferences">Preferences</string>
+    <string name="menu_local_update">Local update</string>
     <string name="menu_auto_updates_check">Auto updates check</string>
     <string name="menu_auto_updates_check_interval_daily">Once a day</string>
     <string name="menu_auto_updates_check_interval_weekly">Once a week</string>
