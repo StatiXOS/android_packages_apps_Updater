@@ -22,10 +22,6 @@
          WARNING: The application can and will delete any unknown file. -->
     <string name="download_path" translatable="false">/data/statix_updates/</string>
 
-    <!-- Directory where the downloads will be exported to.
-         The path is relative to the root of the external storage.-->
-    <string name="export_path" translatable="false">StatiXOS updates/</string>
-
     <!--
         Optional placeholders replaced at runtime:
           {device} - Device name
@@ -73,7 +69,6 @@
     <string name="menu_auto_delete_updates">Delete updates when installed</string>
     <string name="menu_delete_update">Delete</string>
     <string name="menu_copy_url">Copy URL</string>
-    <string name="menu_export_update">Export update</string>
     <string name="menu_ab_perf_mode">Prioritize update process</string>
     <string name="menu_update_recovery">Update recovery</string>
     <string name="toast_forced_update_recovery">It is impossible to disable Lineage Recovery updates on this device.</string>
@@ -119,11 +114,6 @@
     <string name="label_download_url">Download URL</string>
     <string name="toast_download_url_copied">URL Copied</string>
 
-    <string name="dialog_export_title">Exporting update</string>
-    <string name="notification_export_success">Update exported</string>
-    <string name="notification_export_fail">Export error</string>
-    <string name="toast_already_exporting">Already exporting an update</string>
-
     <plurals name="eta_seconds">
         <item quantity="one">1 second left</item>
         <item quantity="other"><xliff:g id="count">%d</xliff:g> seconds left</item>
@@ -142,7 +132,6 @@
     <string name="checkbox_mobile_data_warning">Do not show again</string>
     <string name="menu_mobile_data_warning">Mobile data warning</string>
 
-    <string name="export_channel_title">Export completion</string>
     <string name="new_updates_channel_title">New updates</string>
     <string name="ongoing_channel_title">Ongoing downloads</string>
     <string name="update_failed_channel_title">Update failed</string>

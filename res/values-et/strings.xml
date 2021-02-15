@@ -23,7 +23,6 @@
     <string name="menu_auto_updates_check_interval_weekly">Kord nädalas</string>
     <string name="menu_auto_updates_check_interval_monthly">Kord kuus</string>
     <string name="menu_auto_updates_check_interval_never">Mitte kunagi</string>
-    <string name="menu_show_changelog">Näita muutuste nimekirja</string>
     <string name="menu_ab_perf_mode">Eelista uuendusprotsessi</string>
     <string name="list_download_progress_eta_new"><xliff:g id="filesize_without_unit" example="12.2">%1$s</xliff:g> / <xliff:g id="filesize_without_unit" example="310 MB">%2$s</xliff:g> (<xliff:g id="eta" example="3 minutes left">%3$s</xliff:g>) • <xliff:g id="percentage" example="56">%4$s</xliff:g></string>
     <plurals name="eta_seconds">
@@ -38,6 +37,5 @@
         <item quantity="one">1 tund jäänud</item>
         <item quantity="other"><xliff:g id="count">%d</xliff:g> tundi jäänud</item>
     </plurals>
-    <string name="export_channel_title">Ekspordi lõpuleviimine</string>
     <string name="ongoing_channel_title">Käimasolevad allalaadimised</string>
 </resources>

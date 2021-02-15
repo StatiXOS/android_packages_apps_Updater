@@ -50,8 +50,6 @@
     <string name="menu_auto_delete_updates">설치한 뒤 업데이트 파일 삭제</string>
     <string name="menu_delete_update">삭제</string>
     <string name="menu_copy_url">URL 복사</string>
-    <string name="menu_export_update">업데이트 내보내기</string>
-    <string name="menu_show_changelog">변경 사항 보기</string>
     <string name="menu_ab_perf_mode">우선 업데이트</string>
     <string name="snack_updates_found">새 업데이트 발견</string>
     <string name="snack_no_updates_found">새로운 업데이트 없음</string>
@@ -84,10 +82,6 @@
     <string name="cancel_installation_dialog_message">설치를 취소하시겠습니까?</string>
     <string name="label_download_url">다운로드 URL</string>
     <string name="toast_download_url_copied">URL 복사됨</string>
-    <string name="dialog_export_title">업데이트 내보내는 중</string>
-    <string name="notification_export_success">업데이트를 내보냈습니다.</string>
-    <string name="notification_export_fail">내보내기 오류</string>
-    <string name="toast_already_exporting">이미 업데이트를 내보내는 중입니다.</string>
     <plurals name="eta_seconds">
         <item quantity="other"><xliff:g id="count">%d</xliff:g>초 남음</item>
     </plurals>
@@ -101,8 +95,6 @@
     <string name="update_on_mobile_data_message">모바일 데이터를 사용하여 업데이트 패키지를 다운로드하려 합니다. 데이터를 매우 많이 사용하게 될 수 있습니다. 정말 계속하시겠습니까?</string>
     <string name="checkbox_mobile_data_warning">다시 보지 않기</string>
     <string name="menu_mobile_data_warning">모바일 데이터 경고</string>
-    <string name="blocked_update_dialog_message">이 업데이트는 업데이터 앱으로 설치할 수 없습니다. 자세한 정보는 <xliff:g id="info_url">%1$s</xliff:g> 페이지를 참고하세요.</string>
-    <string name="export_channel_title">내보내기 완료</string>
     <string name="new_updates_channel_title">새 업데이트</string>
     <string name="ongoing_channel_title">진행 중인 다운로드</string>
     <string name="update_failed_channel_title">업데이트 실패</string>

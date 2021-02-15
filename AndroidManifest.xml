@@ -42,7 +42,6 @@
         </activity>
 
         <service android:name="com.statix.updater.controller.UpdaterService" />
-        <service android:name="com.statix.updater.ExportUpdateService" />
 
         <receiver android:name="com.statix.updater.UpdaterReceiver" android:exported="false">
             <intent-filter>

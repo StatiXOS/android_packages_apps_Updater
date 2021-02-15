@@ -502,8 +502,6 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
         MenuBuilder menu = (MenuBuilder) popupMenu.getMenu();
         menu.findItem(R.id.menu_delete_action).setVisible(canDelete);
         menu.findItem(R.id.menu_copy_url).setVisible(update.getAvailableOnline());
-        menu.findItem(R.id.menu_export_update).setVisible(
-                update.getPersistentStatus() == UpdateStatus.Persistent.VERIFIED);
 
         popupMenu.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
@@ -516,32 +514,12 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
                             update.getDownloadUrl(),
                             mActivity.getString(R.string.toast_download_url_copied));
                     return true;
-                case R.id.menu_export_update:
-                    // TODO: start exporting once the permission has been granted
-                    boolean hasPermission = PermissionsUtils.checkAndRequestStoragePermission(
-                            mActivity, 0);
-                    if (hasPermission) {
-                        exportUpdate(update);
-                    }
-                    return true;
             }
             return false;
         });
 
         MenuPopupHelper helper = new MenuPopupHelper(wrapper, menu, anchor);
         helper.show();
-    }
-
-    private void exportUpdate(UpdateInfo update) {
-        File dest = new File(Utils.getExportPath(mActivity), update.getName());
-        if (dest.exists()) {
-            dest = Utils.appendSequentialNumber(dest);
-        }
-        Intent intent = new Intent(mActivity, ExportUpdateService.class);
-        intent.setAction(ExportUpdateService.ACTION_START_EXPORTING);
-        intent.putExtra(ExportUpdateService.EXTRA_SOURCE_FILE, update.getFile());
-        intent.putExtra(ExportUpdateService.EXTRA_DEST_FILE, dest);
-        mActivity.startService(intent);
     }
 
     private boolean isBatteryLevelOk() {

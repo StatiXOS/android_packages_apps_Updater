@@ -65,17 +65,6 @@ public class Utils {
         return new File(context.getString(R.string.download_path));
     }
 
-    public static File getExportPath(Context context) {
-        File dir = new File(Environment.getExternalStorageDirectory(),
-                context.getString(R.string.export_path));
-        if (!dir.isDirectory()) {
-            if (dir.exists() || !dir.mkdirs()) {
-                throw new RuntimeException("Could not create directory");
-            }
-        }
-        return dir;
-    }
-
     public static File getCachedUpdateList(Context context) {
         return new File(context.getCacheDir(), "updates.json");
     }

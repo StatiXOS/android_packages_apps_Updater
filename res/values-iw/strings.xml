@@ -44,8 +44,6 @@
     <string name="menu_auto_delete_updates">מחק קובצי עדכון לאחר התקנתם</string>
     <string name="menu_delete_update">מחק</string>
     <string name="menu_copy_url">העתק כתובת אינטרנט</string>
-    <string name="menu_export_update">יצא עדכון</string>
-    <string name="menu_show_changelog">הצג רשימת שינויים</string>
     <string name="menu_ab_perf_mode">תעדף תהליכי עדכון</string>
     <string name="snack_updates_found">נמצאו עדכונים חדשים</string>
     <string name="snack_no_updates_found">לא נמצאו עדכונים חדשים</string>
@@ -78,10 +76,6 @@
     <string name="cancel_installation_dialog_message">לבטל את ההתקנה?</string>
     <string name="label_download_url">כתובת ההורדה</string>
     <string name="toast_download_url_copied">הכתובת הועתקה</string>
-    <string name="dialog_export_title">מיצא עדכון</string>
-    <string name="notification_export_success">העדכון ייוצא בהצלחה</string>
-    <string name="notification_export_fail">שגיאה בייצוא</string>
-    <string name="toast_already_exporting">כבר באמצע ייצוא עדכון</string>
     <plurals name="eta_seconds">
         <item quantity="one">שניה אחת נותרה</item>
         <item quantity="two"><xliff:g id="count">%d</xliff:g> שניות נותרו</item>
@@ -104,8 +98,6 @@
     <string name="update_on_mobile_data_message">אתה עומד להוריד חבילת עדכונים באמצעות האינטרנט הסלולרי שסביר להניח יגרום לבזבוז חלק גדול מחבילת הגלישה שלך. להמשיך?</string>
     <string name="checkbox_mobile_data_warning">אל תציג שוב</string>
     <string name="menu_mobile_data_warning">אזהרת אינטרנט סלולרי</string>
-    <string name="blocked_update_dialog_message">אין אפשרות להתקין עדכון זה באמצעות יישום המעדכן.  תוכל לקרוא בקישור <xliff:g id="info_url">%1$s</xliff:g> לקבלת מידע נוסף.</string>
-    <string name="export_channel_title">השלמת הייצוא</string>
     <string name="new_updates_channel_title">עדכונים חדשים</string>
     <string name="ongoing_channel_title">הורדות בפעולה</string>
     <string name="update_failed_channel_title">העדכון נכשל</string>
