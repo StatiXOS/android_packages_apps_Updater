@@ -23,18 +23,15 @@ import android.content.res.Resources;
 import android.os.BatteryManager;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
-import android.text.SpannableString;
 import android.text.format.Formatter;
-import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -43,6 +40,7 @@ import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -51,13 +49,11 @@ import com.statix.updater.controller.UpdaterController;
 import com.statix.updater.controller.UpdaterService;
 import com.statix.updater.misc.BuildInfoUtils;
 import com.statix.updater.misc.Constants;
-import com.statix.updater.misc.PermissionsUtils;
 import com.statix.updater.misc.StringGenerator;
 import com.statix.updater.misc.Utils;
 import com.statix.updater.model.UpdateInfo;
 import com.statix.updater.model.UpdateStatus;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -92,7 +88,7 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private Button mAction;
+        private ImageButton mAction;
 
         private TextView mBuildDate;
         private TextView mBuildVersion;
@@ -103,7 +99,7 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
 
         public ViewHolder(final View view) {
             super(view);
-            mAction = (Button) view.findViewById(R.id.update_action);
+            mAction = (ImageButton) view.findViewById(R.id.update_action);
 
             mBuildDate = (TextView) view.findViewById(R.id.build_date);
             mBuildVersion = (TextView) view.findViewById(R.id.build_version);
@@ -242,7 +238,7 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
         if (update == null) {
             // The update was deleted
             viewHolder.mAction.setEnabled(false);
-            viewHolder.mAction.setText(R.string.action_download);
+            setButtonAction(viewHolder.mAction, Action.DOWNLOAD, downloadId, !isBusy());
             return;
         }
 
@@ -316,7 +312,7 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
         CheckBox checkbox = (CheckBox) checkboxView.findViewById(R.id.checkbox);
         checkbox.setText(R.string.checkbox_mobile_data_warning);
 
-        new AlertDialog.Builder(mActivity)
+        new AlertDialog.Builder(mActivity, R.style.AlertDialogTheme)
                 .setTitle(R.string.update_on_mobile_data_title)
                 .setMessage(R.string.update_on_mobile_data_message)
                 .setView(checkboxView)
@@ -334,23 +330,23 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
                 .show();
     }
 
-    private void setButtonAction(Button button, Action action, final String downloadId,
+    private void setButtonAction(ImageButton button, Action action, final String downloadId,
             boolean enabled) {
         final View.OnClickListener clickListener;
         switch (action) {
             case DOWNLOAD:
-                button.setText(R.string.action_download);
+                button.setImageDrawable(ResourcesCompat.getDrawable(mActivity.getResources(), R.drawable.ic_download, mActivity.getTheme()));
                 button.setEnabled(enabled);
                 clickListener = enabled ? view -> startDownloadWithWarning(downloadId) : null;
                 break;
             case PAUSE:
-                button.setText(R.string.action_pause);
+                button.setImageDrawable(ResourcesCompat.getDrawable(mActivity.getResources(), R.drawable.ic_pause, mActivity.getTheme()));
                 button.setEnabled(enabled);
                 clickListener = enabled ? view -> mUpdaterController.pauseDownload(downloadId)
                         : null;
                 break;
             case RESUME: {
-                button.setText(R.string.action_resume);
+                button.setImageDrawable(ResourcesCompat.getDrawable(mActivity.getResources(), R.drawable.ic_resume, mActivity.getTheme()));
                 button.setEnabled(enabled);
                 UpdateInfo update = mUpdaterController.getUpdate(downloadId);
                 final boolean canInstall = Utils.canInstall(update) ||
@@ -366,7 +362,7 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
             }
             break;
             case INSTALL: {
-                button.setText(R.string.action_install);
+                button.setImageDrawable(ResourcesCompat.getDrawable(mActivity.getResources(), R.drawable.ic_install, mActivity.getTheme()));
                 button.setEnabled(enabled);
                 UpdateInfo update = mUpdaterController.getUpdate(downloadId);
                 final boolean canInstall = Utils.canInstall(update);
@@ -381,19 +377,19 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
             }
             break;
             case DELETE: {
-                button.setText(R.string.action_delete);
+                button.setImageDrawable(ResourcesCompat.getDrawable(mActivity.getResources(), R.drawable.ic_trash, mActivity.getTheme()));
                 button.setEnabled(enabled);
                 clickListener = enabled ? view -> getDeleteDialog(downloadId).show() : null;
             }
             break;
             case CANCEL_INSTALLATION: {
-                button.setText(R.string.action_cancel);
+                button.setImageDrawable(ResourcesCompat.getDrawable(mActivity.getResources(), R.drawable.ic_cancel, mActivity.getTheme()));
                 button.setEnabled(enabled);
                 clickListener = enabled ? view -> getCancelInstallationDialog().show() : null;
             }
             break;
             case REBOOT: {
-                button.setText(R.string.reboot);
+                button.setImageDrawable(ResourcesCompat.getDrawable(mActivity.getResources(), R.drawable.ic_restart, mActivity.getTheme()));
                 button.setEnabled(enabled);
                 clickListener = enabled ? view -> {
                     PowerManager pm =
@@ -421,7 +417,7 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
     }
 
     private AlertDialog.Builder getDeleteDialog(final String downloadId) {
-        return new AlertDialog.Builder(mActivity)
+        return new AlertDialog.Builder(mActivity, R.style.AlertDialogTheme)
                 .setTitle(R.string.confirm_delete_dialog_title)
                 .setMessage(R.string.confirm_delete_dialog_message)
                 .setPositiveButton(android.R.string.ok,
@@ -446,7 +442,7 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
             String message = resources.getString(R.string.dialog_battery_low_message_pct,
                     resources.getInteger(R.integer.battery_ok_percentage_discharging),
                     resources.getInteger(R.integer.battery_ok_percentage_charging));
-            return new AlertDialog.Builder(mActivity)
+        return new AlertDialog.Builder(mActivity, R.style.AlertDialogTheme)
                     .setTitle(R.string.dialog_battery_low_title)
                     .setMessage(message)
                     .setPositiveButton(android.R.string.ok, null);
@@ -468,7 +464,7 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
                 DateFormat.MEDIUM, update.getTimestamp());
         String buildInfoText = mActivity.getString(R.string.list_build_version_date,
                 BuildInfoUtils.getBuildVersion(), buildDate);
-        return new AlertDialog.Builder(mActivity)
+        return new AlertDialog.Builder(mActivity, R.style.AlertDialogTheme)
                 .setTitle(R.string.apply_update_dialog_title)
                 .setMessage(mActivity.getString(resId, buildInfoText,
                         mActivity.getString(android.R.string.ok)))
@@ -478,7 +474,7 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
     }
 
     private AlertDialog.Builder getCancelInstallationDialog() {
-        return new AlertDialog.Builder(mActivity)
+        return new AlertDialog.Builder(mActivity, R.style.AlertDialogTheme)
                 .setMessage(R.string.cancel_installation_dialog_message)
                 .setPositiveButton(android.R.string.ok,
                         (dialog, which) -> {

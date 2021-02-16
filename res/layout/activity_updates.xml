@@ -1,84 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:id="@+id/main_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    tools:context=".UpdatesActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="24dp"
+        app:tint="@color/theme_accent"
+        app:srcCompat="@drawable/ic_system_update" />
+
+    <ImageButton
+        android:id="@+id/pref_btn"
+        android:layout_width="50dp"
+        android:layout_height="28dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/ic_settings" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        app:layout_behavior="com.statix.updater.ui.FlingBehavior">
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="80dp"
+        android:fontFamily="@*android:string/config_bodyFontFamily"
+        android:text="@string/header_title_text"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="42sp" />
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:theme="@style/AppTheme.AppBarOverlay"
-            app:collapsedTitleTextAppearance="@style/TextAppearanceInverted"
-            app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleTextAppearance="@style/TextAppearanceTransparent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="86dp"
-                android:paddingBottom="16dp"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
-                app:layout_collapseMode="parallax">
-
-                <TextView
-                    android:id="@+id/header_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
-                    android:paddingBottom="16dp"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="56sp" />
-
-                <TextView
-                    android:id="@+id/header_build_version"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/header_title"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/header_build_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/header_build_version"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/header_last_check"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/header_build_date"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="12sp" />
-            </RelativeLayout>
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:textColor="?android:attr/textColorPrimary"
-                app:layout_collapseMode="pin" />
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-    </com.google.android.material.appbar.AppBarLayout>
+    <TextView
+        android:id="@+id/header_last_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView"
+        android:textAlignment="viewStart"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:fontFamily="@*android:string/config_bodyFontFamily"
+        android:textSize="14sp" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/no_new_updates_view"
         android:layout_width="match_parent"
+        android:layout_above="@id/button_container"
+        android:layout_below="@id/header_last_check"
         android:layout_height="match_parent"
         android:padding="46dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -88,26 +66,38 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/list_no_updates"
+            android:fontFamily="@*android:string/config_bodyFontFamily"
             android:textColor="?android:textColorSecondary" />
     </androidx.core.widget.NestedScrollView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
+        android:layout_above="@id/button_container"
+        android:layout_below="@id/header_last_check"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingBottom="5dp"
+        android:paddingBottom="25dp"
         android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <ImageButton
-        android:id="@+id/refreshbtn"
+    <LinearLayout
         android:layout_width="wrap_content"
+        android:id="@+id/button_container"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:background="@drawable/ic_circle"
-        android:padding="10dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="20dp"
-        android:src="@drawable/ic_menu_refresh" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true">
+
+        <ImageButton
+            android:id="@+id/refreshbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_circle"
+            android:padding="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/ic_menu_refresh" />
+
+    </LinearLayout>
+
+</RelativeLayout>
