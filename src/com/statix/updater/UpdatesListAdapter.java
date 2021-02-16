@@ -145,7 +145,7 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
         final String downloadId = update.getDownloadId();
         if (mUpdaterController.isDownloading(downloadId)) {
             canDelete = true;
-            String downloaded = StringGenerator.bytesToMegabytes(mActivity,
+            String downloaded = Formatter.formatShortFileSize(mActivity,
                     update.getFile().length());
             String total = Formatter.formatShortFileSize(mActivity, update.getFileSize());
             String percentage = NumberFormat.getPercentInstance().format(
@@ -179,7 +179,7 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
         } else {
             canDelete = true;
             setButtonAction(viewHolder.mAction, Action.RESUME, downloadId, !isBusy());
-            String downloaded = StringGenerator.bytesToMegabytes(mActivity,
+            String downloaded = Formatter.formatShortFileSize(mActivity,
                     update.getFile().length());
             String total = Formatter.formatShortFileSize(mActivity, update.getFileSize());
             String percentage = NumberFormat.getPercentInstance().format(
