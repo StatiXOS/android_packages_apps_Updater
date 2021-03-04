@@ -104,11 +104,11 @@ public class Utils {
 
     public static boolean canInstall(UpdateBaseInfo update) {
         String currentBuild = SystemProperties.get(Constants.PROP_BUILD_VERSION);
-        double version = Double.parseDouble(currentBuild.substring(1, 4));
+        int majorVersion = Integer.parseInt(currentBuild.substring(1, 4).split("\\.")[0]);
+        int updateMajorVersion = Integer.parseInt(update.getVersion().split("\\.")[0]);
         return (SystemProperties.getBoolean(Constants.PROP_UPDATER_ALLOW_DOWNGRADING, false) ||
                 update.getTimestamp() > SystemProperties.getLong(Constants.PROP_BUILD_DATE, 0)) &&
-                update.getVersion().equalsIgnoreCase(
-                        String.valueOf(version));
+                majorVersion == updateMajorVersion;
     }
 
     public static List<UpdateInfo> parseJson(File file, boolean compatibleOnly)
